@@ -4,7 +4,7 @@ require 'date'
 
 # Library order class
 class Order
-  attr_accessor :book, :reader, :date
+  attr_reader :book, :reader, :date
 
   def initialize(book, reader, date = Date.today)
     validate_data(book, reader, date)

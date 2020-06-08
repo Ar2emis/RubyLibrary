@@ -2,7 +2,7 @@
 
 # Library reader class
 class Reader
-  attr_accessor :name, :email, :city, :street, :house
+  attr_reader :name, :email, :city, :street, :house
 
   def initialize(name, email, city, street, house)
     validate_data(name, email, city, street, house)

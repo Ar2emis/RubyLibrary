@@ -2,7 +2,7 @@
 
 # Library book author class
 class Author
-  attr_accessor :name, :description
+  attr_reader :name, :description
 
   def initialize(name, biography = nil)
     validate_data(name, description)
