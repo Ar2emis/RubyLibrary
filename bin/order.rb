@@ -6,38 +6,39 @@ require 'date'
 class Order
   attr_reader :book, :reader, :date
 
-  def initialize(book, reader, date = Date.today)
-    validate_data(book, reader, date)
-
-    @book   = book
-    @reader = reader
-    @date   = date
+  def initialize(book:, reader:, date: Date.today)
+    self.book   = book
+    self.reader = reader
+    self.date   = date
   end
 
   def to_s
     "Order\n\
-    Book: \"#{@book.title}\" #{@book.author.name}\n\
-    Reader: #{@reader.name}\n\
-    Date: #{@date}"
+    Book: \"#{book.title}\" #{book.author.name}\n\
+    Reader: #{reader.name}\n\
+    Date: #{date}"
   end
 
   private
 
-  def validate_data(book, reader, date)
-    validate_book(book)
-    validate_reader(reader)
-    validate_date(date)
+  def book=(book)
+    Validator.validate_class(expected_class: Book, instance_class: book.class,
+                             error_class: LibraryArgumentError, message: 'book must be a Book object')
+
+    @book = book
   end
 
-  def validate_book(book)
-    raise ArgumentError, 'Book must be Book object' unless book.is_a?(Book)
+  def reader=(reader)
+    Validator.validate_class(expected_class: Reader, instance_class: reader.class,
+                             error_class: LibraryArgumentError, message: 'reader must be a Reader object')
+
+    @reader = reader
   end
 
-  def validate_reader(reader)
-    raise ArgumentError, 'Reader must be Reader object' unless reader.is_a?(Reader)
-  end
+  def date=(date)
+    Validator.validate_class(expected_class: Date, instance_class: date.class,
+                             error_class: LibraryArgumentError, message: 'date must be a Date object')
 
-  def validate_date(date)
-    raise ArgumentError, 'Date must be Date object' unless date.is_a?(Date)
+    @date = date
   end
 end

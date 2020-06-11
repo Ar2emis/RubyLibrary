@@ -5,30 +5,31 @@ class Author
   attr_reader :name, :description
 
   def initialize(name, biography = nil)
-    validate_data(name, description)
-
-    @name      = name
-    @biography = biography
+    self.name      = name
+    self.biography = biography
   end
 
   def to_s
     "Author\n\
-  Name: #{@name}\n\
-  Description: #{@biography.nil? ? 'None' : @biography}"
+  Name: #{name}\n\
+  Description: #{biography.nil? ? 'None' : biography}"
   end
 
   private
 
-  def validate_data(name, biography)
-    validate_name(name)
-    validate_biography(biography)
+  def name=(name)
+    Validator.validate_class(expected_class: String, instance_class: name.class,
+                             error_class: LibraryArgumentError, message: 'name must be a String object')
+    Validator.validate_non_empty_string(string: name,
+                                        error_class: LibraryArgumentError, message: 'name must not be empty')
+
+    @name = name
   end
 
-  def validate_name(name)
-    raise ArgumentError, 'Name must be String object and not be empty' if !name.is_a?(String) || name.empty?
-  end
+  def biography=(biography)
+    Validator.validate_class_or_nil(expected_class: String, instance_class: biography.class,
+                                    error_class: LibraryArgumentError, message: 'biography must be String object')
 
-  def validate_biography(biography)
-    raise ArgumentError, 'Description must be String object' unless biography.is_a?(String) || biography.nil?
+    @biography = biography
   end
 end

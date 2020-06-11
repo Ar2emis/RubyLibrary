@@ -4,6 +4,8 @@ require_relative 'book'
 require_relative 'author'
 require_relative 'reader'
 require_relative 'order'
+require_relative 'validator'
+require_relative 'library_argument_error'
 require 'yaml/store'
 
 # Library class
@@ -54,26 +56,30 @@ class Library
   end
 
   def add_author(author)
-    raise ArgumentError, 'Author must be an Author object' unless author.is_a?(Author)
+    Validator.validate_class(expected_class: Author, instance_class: author.class,
+                             error_class: LibraryArgumentError, message: 'author must be an Author object')
 
     authors.append(author)
   end
 
   def add_book(book)
-    raise ArgumentError, 'Book must be a Book object' unless book.is_a?(Book)
+    Validator.validate_class(expected_class: Book, instance_class: book.class,
+                             error_class: LibraryArgumentError, message: 'book must be a Book object')
 
     add_author(book.author) unless @authors.include?(book.author)
     @books.append(book)
   end
 
   def add_reader(reader)
-    raise ArgumentError, 'Reader must be a Reader object' unless reader.is_a?(Reader)
+    Validator.validate_class(expected_class: Reader, instance_class: reader.class,
+                             error_class: LibraryArgumentError, message: 'reader must be a Reader object')
 
     readers.append(reader)
   end
 
   def add_order(order)
-    raise ArgumentError, 'Order must be an Order object' unless order.is_a?(Order)
+    Validator.validate_class(expected_class: Order, instance_class: order.class,
+                             error_class: LibraryArgumentError, message: 'order must be an Order object')
 
     add_book(order.book) unless @books.include?(order.book)
     add_reader(order.reader) unless @readers.include?(order.reader)
@@ -83,16 +89,16 @@ class Library
   private
 
   def load
-    return { authors: [], books: [], readers: [], orders: [] } unless File.file?(STORAGE_FILE)
+    # return { authors: [], books: [], readers: [], orders: [] } unless File.file?(STORAGE_FILE)
 
     store = YAML::Store.new(STORAGE_FILE)
 
     library_data = nil
     store.transaction do
-      library_data = { authors: store[:authors],
-                       books: store[:books],
-                       readers: store[:readers],
-                       orders: store[:orders] }
+      library_data = { authors: store[:authors] || [],
+                       books: store[:books] || [],
+                       readers: store[:readers] || [],
+                       orders: store[:orders] || [] }
     end
 
     library_data
