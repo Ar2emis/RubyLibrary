@@ -25,18 +25,18 @@ library.add_book(johns_book)
 library.add_book(janes_book)
 
 # Creating of the Reader instance
-jack_roe = Reader.new('Jack Roe', 'jack_roe@gmail.com', 'Ottawa', 'Riverdale Ave', 12)
-jill_roe = Reader.new('Jill Roe', 'jill_roe@gmail.com', 'Oslo', 'Heimdalsgata', 3)
+jack_roe = Reader.new(name: 'Jack Roe', email: 'jack_roe@gmail.com', city: 'Ottawa', street: 'Riverdale Ave', house: 12)
+jill_roe = Reader.new(name: 'Jill Roe', email: 'jill_roe@gmail.com', city: 'Oslo', street: 'Heimdalsgata', house: 3)
 
 # Adding readers to the library
 library.add_reader(jack_roe)
 library.add_reader(jill_roe)
 
 # Creating of the Order instance with all parameters
-jacks_order = Order.new(johns_book, jack_roe, Date.today)
+jacks_order = Order.new(book: johns_book, reader: jack_roe, date: Date.today)
 
 # Creating of the Order without date
-jills_order = Order.new(janes_book, jill_roe)
+jills_order = Order.new(book: janes_book, reader: jill_roe)
 
 # Adding orders to the library
 library.add_order(jacks_order)
