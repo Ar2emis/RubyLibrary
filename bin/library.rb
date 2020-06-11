@@ -10,6 +10,7 @@ require 'yaml/store'
 
 # Library class
 class Library
+  include Validator
   STORAGE_FILE = 'library_storage.yml'
   attr_reader :authors, :books, :readers, :orders
 
@@ -56,30 +57,30 @@ class Library
   end
 
   def add_author(author)
-    Validator.validate_class(expected_class: Author, instance_class: author.class,
-                             error_class: LibraryArgumentError, message: 'author must be an Author object')
+    validate_class(expected_class: Author, instance_class: author.class,
+                   error_class: LibraryArgumentError, message: 'author must be an Author object')
 
     authors.append(author)
   end
 
   def add_book(book)
-    Validator.validate_class(expected_class: Book, instance_class: book.class,
-                             error_class: LibraryArgumentError, message: 'book must be a Book object')
+    validate_class(expected_class: Book, instance_class: book.class,
+                   error_class: LibraryArgumentError, message: 'book must be a Book object')
 
     add_author(book.author) unless @authors.include?(book.author)
     @books.append(book)
   end
 
   def add_reader(reader)
-    Validator.validate_class(expected_class: Reader, instance_class: reader.class,
-                             error_class: LibraryArgumentError, message: 'reader must be a Reader object')
+    validate_class(expected_class: Reader, instance_class: reader.class,
+                   error_class: LibraryArgumentError, message: 'reader must be a Reader object')
 
     readers.append(reader)
   end
 
   def add_order(order)
-    Validator.validate_class(expected_class: Order, instance_class: order.class,
-                             error_class: LibraryArgumentError, message: 'order must be an Order object')
+    validate_class(expected_class: Order, instance_class: order.class,
+                   error_class: LibraryArgumentError, message: 'order must be an Order object')
 
     add_book(order.book) unless @books.include?(order.book)
     add_reader(order.reader) unless @readers.include?(order.reader)

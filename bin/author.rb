@@ -2,6 +2,7 @@
 
 # Library book author class
 class Author
+  include Validator
   attr_reader :name, :description
 
   def initialize(name, biography = nil)
@@ -18,17 +19,16 @@ class Author
   private
 
   def name=(name)
-    Validator.validate_class(expected_class: String, instance_class: name.class,
-                             error_class: LibraryArgumentError, message: 'name must be a String object')
-    Validator.validate_non_empty_string(string: name,
-                                        error_class: LibraryArgumentError, message: 'name must not be empty')
+    validate_class(expected_class: String, instance_class: name.class,
+                   error_class: LibraryArgumentError, message: 'name must be a String object')
+    validate_non_empty_string(string: name, error_class: LibraryArgumentError, message: 'name must not be empty')
 
     @name = name
   end
 
   def biography=(biography)
-    Validator.validate_class_or_nil(expected_class: String, instance_class: biography.class,
-                                    error_class: LibraryArgumentError, message: 'biography must be String object')
+    validate_class_or_nil(expected_class: String, instance_class: biography.class,
+                          error_class: LibraryArgumentError, message: 'biography must be String object')
 
     @biography = biography
   end
