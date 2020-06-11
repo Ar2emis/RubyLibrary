@@ -89,8 +89,6 @@ class Library
   private
 
   def load
-    # return { authors: [], books: [], readers: [], orders: [] } unless File.file?(STORAGE_FILE)
-
     store = YAML::Store.new(STORAGE_FILE)
 
     library_data = nil
