@@ -56,4 +56,3 @@ build-iPhoneSimulator/
 # .rubocop-https?--*
 
 library_storage.yml
-rubocop.yml

@@ -1,45 +1,41 @@
 # frozen_string_literal: true
 
-require 'date'
-
-# Library order class
 class Order
   include Validator
   attr_reader :book, :reader, :date
 
   def initialize(book:, reader:, date: Date.today)
-    self.book   = book
-    self.reader = reader
-    self.date   = date
+    validate_data(book: book, reader: reader, date: date)
+
+    @book   = book
+    @reader = reader
+    @date   = date
   end
 
   def to_s
     "Order\n\
-    Book: \"#{book.title}\" #{book.author.name}\n\
-    Reader: #{reader.name}\n\
-    Date: #{date}"
+    Book: \"#{@book.title}\" #{@book.author.name}\n\
+    Reader: #{@reader.name}\n\
+    Date: #{@date}"
   end
 
   private
 
-  def book=(book)
-    validate_class(expected_class: Book, instance_class: book.class,
-                   error_class: LibraryArgumentError, message: 'book must be a Book object')
-
-    @book = book
+  def validate_data(book:, reader:, date:)
+    validate_book(book)
+    validate_reader(reader)
+    validate_date(date)
   end
 
-  def reader=(reader)
-    validate_class(expected_class: Reader, instance_class: reader.class,
-                   error_class: LibraryArgumentError, message: 'reader must be a Reader object')
-
-    @reader = reader
+  def validate_book(book)
+    validate_class(Book, book.class)
   end
 
-  def date=(date)
-    validate_class(expected_class: Date, instance_class: date.class,
-                   error_class: LibraryArgumentError, message: 'date must be a Date object')
+  def validate_reader(reader)
+    validate_class(Reader, reader.class)
+  end
 
-    @date = date
+  def validate_date(date)
+    validate_class(Date, date.class)
   end
 end

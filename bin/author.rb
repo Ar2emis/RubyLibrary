@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
-# Library book author class
 class Author
   include Validator
   attr_reader :name, :description
 
   def initialize(name, biography = nil)
-    self.name      = name
-    self.biography = biography
+    validate_data(name, biography)
+
+    @name      = name
+    @biography = biography
   end
 
   def to_s
     "Author\n\
-  Name: #{name}\n\
-  Description: #{biography.nil? ? 'None' : biography}"
+  Name: #{@name}\n\
+  Description: #{@biography.nil? ? 'None' : @biography}"
   end
 
   private
 
-  def name=(name)
-    validate_class(expected_class: String, instance_class: name.class,
-                   error_class: LibraryArgumentError, message: 'name must be a String object')
-    validate_non_empty_string(string: name, error_class: LibraryArgumentError, message: 'name must not be empty')
-
-    @name = name
+  def validate_data(name, biography)
+    validate_name(name)
+    validate_biography(biography)
   end
 
-  def biography=(biography)
-    validate_class_or_nil(expected_class: String, instance_class: biography.class,
-                          error_class: LibraryArgumentError, message: 'biography must be String object')
+  def validate_name(name)
+    validate_class(String, name.class)
+    validate_non_empty_string(name)
+  end
 
-    @biography = biography
+  def validate_biography(biography)
+    validate_class_or_nil(String, biography.class)
   end
 end

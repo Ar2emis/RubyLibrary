@@ -1,20 +1,27 @@
 # frozen_string_literal: true
 
-# Validation module that contains methods which raise error if validation has been failed
 module Validator
-  def validate_class(expected_class:, instance_class:, error_class:, message: '')
-    raise error_class, message unless expected_class == instance_class
+  def validate_class(expected_class, instance_class)
+    message = "Not expected class. Expected #{expected_class} class, but was #{instance_class} class"
+    raise_error(message) unless expected_class == instance_class
   end
 
-  def validate_class_or_nil(expected_class:, instance_class:, error_class:, message: '')
-    raise error_class, message unless [expected_class, NilClass].include?(instance_class)
+  def validate_class_or_nil(expected_class, instance_class)
+    message = "Not expected class. Expected #{expected_class} class or NilClass, but was #{instance_class} class"
+    raise_error(message) unless [expected_class, NilClass].include?(instance_class)
   end
 
-  def validate_non_empty_string(string:, error_class:, message: '')
-    raise error_class, message if string.empty?
+  def validate_non_empty_string(string)
+    message = 'String was empty'
+    raise_error(message) if string.empty?
   end
 
-  def validate_positive_integer(number:, error_class:, message: '')
-    raise error_class, message if number <= 0
+  def validate_positive_integer(number)
+    message = 'Integer was not positive'
+    raise_error(message) if number <= 0
+  end
+
+  def raise_error(message)
+    raise LibraryArgumentError, message
   end
 end

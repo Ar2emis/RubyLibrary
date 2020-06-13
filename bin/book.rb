@@ -1,36 +1,35 @@
 # frozen_string_literal: true
 
-# Library book class
 class Book
   include Validator
   attr_reader :title, :author
 
   def initialize(title, author)
-    self.title  = title
-    self.author = author
+    validate_data(title, author)
+
+    @title  = title
+    @author = author
   end
 
   def to_s
     "Book\n\
-  Title: \"#{title}\"\n\
-  Author: #{author.name}"
+  Title: \"#{@title}\"\n\
+  Author: #{@author.name}"
   end
 
   private
 
-  def title=(title)
-    validate_class(expected_class: String, instance_class: title.class,
-                   error_class: LibraryArgumentError, message: 'title must be a String object')
-    validate_non_empty_string(string: title,
-                              error_class: LibraryArgumentError, message: 'title must not be empty')
-
-    @title = title
+  def validate_data(title, author)
+    validate_title(title)
+    validate_author(author)
   end
 
-  def author=(author)
-    validate_class(expected_class: Author, instance_class: author.class,
-                   error_class: LibraryArgumentError, message: 'author must be an Author object')
+  def validate_title(title)
+    validate_class(String, title.class)
+    validate_non_empty_string(title)
+  end
 
-    @author = author
+  def validate_author(author)
+    validate_class(Author, author.class)
   end
 end
