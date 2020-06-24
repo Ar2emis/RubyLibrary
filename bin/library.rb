@@ -16,19 +16,11 @@ class Library
   end
 
   def top_readers(amount = 1)
-    distinct_orders_by_book_and_count = ->(orders) { orders.uniq(&:book).count }
-    compare_readers = ->(first_reader, second_reader) { first_reader[1] <=> second_reader[1] }
-
-    @orders.group_by(&:reader).transform_values(&distinct_orders_by_book_and_count)
-           .to_a.max(amount, &compare_readers).map(&:first)
+    top_objects_from_collection(@orders, :reader, :book, amount)
   end
 
   def most_popular_books(amount = 1)
-    distinct_orders_by_reader_and_count = ->(orders) { orders.uniq(&:reader).count }
-    compare_books = ->(first_book, second_book) { first_book[1] <=> second_book[1] }
-
-    @orders.group_by(&:book).transform_values(&distinct_orders_by_reader_and_count)
-           .to_a.max(amount, &compare_books).map(&:first)
+    top_objects_from_collection(@orders, :book, :reader, amount)
   end
 
   def number_of_readers_of_the_most_popular_books(amount = 3)
@@ -45,7 +37,7 @@ class Library
                     when Reader then @readers
                     when Order  then @orders
                     else
-                      raise_error('Unintended object was given')
+                      raise UnexpectedClassError
                     end
 
     library_group << library_object
@@ -53,5 +45,15 @@ class Library
 
   def save
     @library_store.save
+  end
+
+  private
+
+  def top_objects_from_collection(collection, grouper, uniquer, amount)
+    distinct_and_count = ->(values) { values.uniq(&uniquer).count }
+    compare = ->(first_object, second_object) { first_object[1] <=> second_object[1] }
+
+    collection.group_by(&grouper).transform_values(&distinct_and_count)
+              .to_a.max(amount, &compare).map(&:first)
   end
 end

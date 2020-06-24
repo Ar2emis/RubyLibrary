@@ -25,31 +25,15 @@ class Reader
   private
 
   def validate_data(name:, email:, city:, street:, house:)
-    validate_name(name)
-    validate_email(email)
-    validate_city(city)
-    validate_street(street)
+    validate_string_parameters(name: name, email: email, city: city, street: street)
     validate_house(house)
   end
 
-  def validate_name(name)
-    validate_class(String, name)
-    validate_non_empty_string(name)
-  end
-
-  def validate_email(email)
-    validate_class(String, email)
-    validate_non_empty_string(email)
-  end
-
-  def validate_city(city)
-    validate_class(String, city)
-    validate_non_empty_string(city)
-  end
-
-  def validate_street(street)
-    validate_class(String, street)
-    validate_non_empty_string(street)
+  def validate_string_parameters(name:, email:, city:, street:)
+    [name, email, city, street].each do |string|
+      validate_class(String, string)
+      validate_non_empty_string(string)
+    end
   end
 
   def validate_house(house)
