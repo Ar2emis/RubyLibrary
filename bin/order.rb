@@ -7,16 +7,16 @@ class Order
   def initialize(book:, reader:, date: Date.today)
     validate_data(book: book, reader: reader, date: date)
 
-    @book   = book
+    @book = book
     @reader = reader
-    @date   = date
+    @date = date
   end
 
   def to_s
     "Order\n\
-    Book: \"#{@book.title}\" #{@book.author.name}\n\
-    Reader: #{@reader.name}\n\
-    Date: #{@date}"
+    Book: \"#{book.title}\" #{book.author.name}\n\
+    Reader: #{reader.name}\n\
+    Date: #{date}"
   end
 
   private
@@ -28,14 +28,14 @@ class Order
   end
 
   def validate_book(book)
-    validate_class(Book, book.class)
+    validate_class(Book, book)
   end
 
   def validate_reader(reader)
-    validate_class(Reader, reader.class)
+    validate_class(Reader, reader)
   end
 
   def validate_date(date)
-    validate_class(Date, date.class)
+    validate_class(Date, date)
   end
 end

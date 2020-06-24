@@ -8,11 +8,11 @@ class Library
   attr_reader :authors, :books, :readers, :orders
 
   def initialize
-    library_data = LibraryStore.new.load
-    @authors = library_data[:authors]
-    @books   = library_data[:books]
-    @readers = library_data[:readers]
-    @orders  = library_data[:orders]
+    @library_store = LibraryStore.new
+    @authors = @library_store.authors
+    @books = @library_store.books
+    @readers = @library_store.readers
+    @orders = @library_store.orders
   end
 
   def top_readers(amount = 1)
@@ -38,18 +38,20 @@ class Library
     @orders.select(&filter_orders_of_most_popular_books).uniq(&:reader).count
   end
 
-  def add(object)
-    case object
-    when Author then @authors << object
-    when Book   then @books   << object
-    when Reader then @readers << object
-    when Order  then @orders  << object
-    else
-      raise_error('Unintended object was given')
-    end
+  def add(library_object)
+    library_group = case library_object
+                    when Author then @authors
+                    when Book   then @books
+                    when Reader then @readers
+                    when Order  then @orders
+                    else
+                      raise_error('Unintended object was given')
+                    end
+
+    library_group << library_object
   end
 
   def save
-    LibraryStore.new.save(authors: @authors, books: @books, readers: @readers, orders: @orders)
+    @library_store.save
   end
 end

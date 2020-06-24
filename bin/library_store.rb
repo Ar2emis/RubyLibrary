@@ -1,30 +1,45 @@
 # frozen_string_literal: true
 
 class LibraryStore
+  STORAGE_DIRECTORY = 'db'
   STORAGE_FILE = 'library_storage.yml'
+  attr_accessor :authors, :books, :readers, :orders
 
-  def save(authors:, books:, readers:, orders:)
-    store = YAML::Store.new(STORAGE_FILE)
+  def initialize
+    initialize_db unless db_initialized?
+
+    store = YAML::Store.new(storage_file_path)
 
     store.transaction do
-      store[:authors] = authors
-      store[:books]   = books
-      store[:readers] = readers
-      store[:orders]  = orders
+      @authors = store[:authors] || []
+      @books = store[:books] || []
+      @readers = store[:readers] || []
+      @orders = store[:orders] || []
     end
   end
 
-  def load
-    store = YAML::Store.new(STORAGE_FILE)
+  def save
+    store = YAML::Store.new(storage_file_path)
 
-    library_data = nil
     store.transaction do
-      library_data = { authors: store[:authors] || [],
-                       books: store[:books]     || [],
-                       readers: store[:readers] || [],
-                       orders: store[:orders]   || [] }
+      store[:authors] = authors
+      store[:books] = books
+      store[:readers] = readers
+      store[:orders] = orders
     end
+  end
 
-    library_data
+  private
+
+  def initialize_db
+    Dir.mkdir(File.join(STORAGE_DIRECTORY))
+  end
+
+  def storage_file_path
+    File.join(STORAGE_DIRECTORY, STORAGE_FILE)
+  end
+
+  def db_initialized?
+    Dir.exist?(STORAGE_DIRECTORY)
   end
 end

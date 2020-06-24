@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Validator
-  def validate_class(expected_class, instance_class)
-    message = "Not expected class. Expected #{expected_class} class, but was #{instance_class} class"
-    raise_error(message) unless expected_class == instance_class
+  def validate_class(expected_class, instance)
+    message = "Not expected class. Expected #{expected_class} class, but was #{instance.class} class"
+    raise_error(message) unless expected_class == instance.class
   end
 
-  def validate_class_or_nil(expected_class, instance_class)
-    message = "Not expected class. Expected #{expected_class} class or NilClass, but was #{instance_class} class"
-    raise_error(message) unless [expected_class, NilClass].include?(instance_class)
+  def validate_class_or_nil(expected_class, instance)
+    message = "Not expected class. Expected #{expected_class} class or NilClass, but was #{instance.class} class"
+    raise_error(message) unless [expected_class, NilClass].include?(instance.class)
   end
 
   def validate_non_empty_string(string)

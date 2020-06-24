@@ -7,14 +7,14 @@ class Author
   def initialize(name, biography = nil)
     validate_data(name, biography)
 
-    @name      = name
+    @name = name
     @biography = biography
   end
 
   def to_s
     "Author\n\
-  Name: #{@name}\n\
-  Description: #{@biography.nil? ? 'None' : @biography}"
+  Name: #{name}\n\
+  Description: #{biography.nil? ? 'None' : biography}"
   end
 
   private
@@ -25,11 +25,11 @@ class Author
   end
 
   def validate_name(name)
-    validate_class(String, name.class)
+    validate_class(String, name)
     validate_non_empty_string(name)
   end
 
   def validate_biography(biography)
-    validate_class_or_nil(String, biography.class)
+    validate_class_or_nil(String, biography)
   end
 end

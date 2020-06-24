@@ -7,14 +7,14 @@ class Book
   def initialize(title, author)
     validate_data(title, author)
 
-    @title  = title
+    @title = title
     @author = author
   end
 
   def to_s
     "Book\n\
-  Title: \"#{@title}\"\n\
-  Author: #{@author.name}"
+  Title: \"#{title}\"\n\
+  Author: #{author.name}"
   end
 
   private
@@ -25,11 +25,11 @@ class Book
   end
 
   def validate_title(title)
-    validate_class(String, title.class)
+    validate_class(String, title)
     validate_non_empty_string(title)
   end
 
   def validate_author(author)
-    validate_class(Author, author.class)
+    validate_class(Author, author)
   end
 end
