@@ -9,33 +9,32 @@ class Library
 
   def initialize
     @library_store = LibraryStore.new
-    @authors = @library_store.authors
-    @books = @library_store.books
-    @readers = @library_store.readers
-    @orders = @library_store.orders
+    data = @library_store.data
+
+    @authors = data[:authors]
+    @books = data[:books]
+    @readers = data[:readers]
+    @orders = data[:orders]
   end
 
   def top_readers(amount = 1)
-    top_objects_from_collection(@orders, :reader, :book, amount)
+    top_objects_from_orders(:reader, :book, amount)
   end
 
   def most_popular_books(amount = 1)
-    top_objects_from_collection(@orders, :book, :reader, amount)
+    top_objects_from_orders(:book, :reader, amount)
   end
 
   def number_of_readers_of_the_most_popular_books(amount = 3)
-    most_popular_books = most_popular_books(amount)
-    filter_orders_of_most_popular_books = ->(order) { most_popular_books.include?(order.book) }
-
-    @orders.select(&filter_orders_of_most_popular_books).uniq(&:reader).count
+    @orders.select { |order| most_popular_books(amount).include?(order.book) }.uniq(&:reader).count
   end
 
   def add(library_object)
     library_group = case library_object
-                    when Author then @authors
-                    when Book   then @books
-                    when Reader then @readers
-                    when Order  then @orders
+                    when Author then authors
+                    when Book   then books
+                    when Reader then readers
+                    when Order  then orders
                     else
                       raise UnexpectedClassError
                     end
@@ -49,11 +48,8 @@ class Library
 
   private
 
-  def top_objects_from_collection(collection, grouper, uniquer, amount)
-    distinct_and_count = ->(values) { values.uniq(&uniquer).count }
-    compare = ->(first_object, second_object) { first_object[1] <=> second_object[1] }
-
-    collection.group_by(&grouper).transform_values(&distinct_and_count)
-              .to_a.max(amount, &compare).map(&:first)
+  def top_objects_from_orders(grouper, uniquer, amount)
+    @orders.group_by(&grouper).transform_values { |values| values.uniq(&uniquer).count }
+           .to_a.max_by(amount, &:last).map(&:first)
   end
 end

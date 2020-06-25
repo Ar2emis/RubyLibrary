@@ -3,7 +3,7 @@
 class NegativeOrZeroIntegerError < StandardError
   STANDARD_MESSAGE = 'Integer was negative or zero'
 
-  def initialize(message = nil)
-    super(message.nil? ? STANDARD_MESSAGE : message)
+  def initialize(message = STANDARD_MESSAGE)
+    super(message)
   end
 end

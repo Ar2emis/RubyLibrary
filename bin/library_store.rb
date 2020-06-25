@@ -3,36 +3,34 @@
 class LibraryStore
   STORAGE_DIRECTORY = 'db'
   STORAGE_FILE = 'library_storage.yml'
-  attr_accessor :authors, :books, :readers, :orders
+  attr_accessor :data
 
   def initialize
-    initialize_db unless db_initialized?
-
-    store = YAML::Store.new(storage_file_path)
-
-    store.transaction do
-      @authors = store[:authors] || []
-      @books = store[:books] || []
-      @readers = store[:readers] || []
-      @orders = store[:orders] || []
-    end
+    @data = db_initialized? ? load : initialize_db
   end
 
   def save
     store = YAML::Store.new(storage_file_path)
 
     store.transaction do
-      store[:authors] = authors
-      store[:books] = books
-      store[:readers] = readers
-      store[:orders] = orders
+      data.each { |key, value| store[key] = value }
     end
   end
 
   private
 
+  def load
+    store = YAML::Store.new(storage_file_path)
+
+    store.transaction do
+      store.roots.to_h { |key| [key, store[key]] }
+    end
+  end
+
   def initialize_db
     Dir.mkdir(File.join(STORAGE_DIRECTORY))
+
+    standard_data
   end
 
   def storage_file_path
@@ -41,5 +39,14 @@ class LibraryStore
 
   def db_initialized?
     Dir.exist?(STORAGE_DIRECTORY)
+  end
+
+  def standard_data
+    {
+      authors: [],
+      books: [],
+      readers: [],
+      orders: []
+    }
   end
 end

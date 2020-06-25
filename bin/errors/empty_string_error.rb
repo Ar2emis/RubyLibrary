@@ -3,7 +3,7 @@
 class EmptyStringError < StandardError
   STANDARD_MESSAGE = 'String was empty'
 
-  def initialize(message = nil)
-    super(message.nil? ? STANDARD_MESSAGE : message)
+  def initialize(message = STANDARD_MESSAGE)
+    super(message)
   end
 end

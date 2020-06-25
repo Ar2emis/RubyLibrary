@@ -5,7 +5,7 @@ class Author
   attr_reader :name, :description
 
   def initialize(name, biography = '')
-    validate_data(name)
+    validate_name(name)
 
     @name = name
     @biography = biography
@@ -18,10 +18,6 @@ class Author
   end
 
   private
-
-  def validate_data(name)
-    validate_name(name)
-  end
 
   def validate_name(name)
     validate_class(String, name)
